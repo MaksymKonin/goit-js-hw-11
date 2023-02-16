@@ -25,7 +25,8 @@ li {
 img {
   display: block;
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: cover;
 }
 
 body {
@@ -95,13 +96,16 @@ input:hover {
 }
 
 .gallery {
+  margin-top: 20px;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: flex-start;
   gap: 20px;
 }
-
+.thumb {
+  height: 200px;
+}
 .photo-card {
   flex-basis: 100%;
   flex-basis: calc((100% - 60px) / 4);

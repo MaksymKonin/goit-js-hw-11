@@ -10,8 +10,8 @@ formEl.addEventListener('submit', onFormSubmit);
 
 function onFormSubmit(evt) {
   evt.preventDefault();
-  search = evt.currentTarget.elements.searchQuery.value;
-  Api.getData(search).then(data => {
+  searchValue = evt.currentTarget.elements.searchQuery.value.trim();
+  Api.getData(searchValue).then(data => {
     console.log(data);
     renderMarkup(data.hits);
   });
@@ -27,7 +27,9 @@ function markupOneCard({
   downloads,
 }) {
   const photoCard = `<div class="photo-card">
+            <div class="thumb">
             <img src='${webformatURL}' alt="${tags}" loading="lazy" />
+             </div>
               <div class="info">
                 <p class="info-item">
                   <b>Likes</b> <br> ${likes}
