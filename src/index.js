@@ -1,7 +1,6 @@
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
-import axios from 'axios';
 
-import NewsApiService from './api.js';
+import NewsApiService from './NewsApiService.js';
 import Markup from './markup.js';
 import LoadMoreBtn from './components/LoadMoreBtn.js';
 
@@ -11,15 +10,15 @@ const loadMoreBtn = new LoadMoreBtn({
   isHidden: true,
 });
 
+console.log(loadMoreBtn.btn);
 const formEl = document.querySelector('#search-form');
 
-console.log(loadMoreBtn);
 formEl.addEventListener('submit', onFormSubmit);
 loadMoreBtn.btn.addEventListener('click', onLoadMoreClick);
 
 function onFormSubmit(evt) {
   evt.preventDefault();
-  newsApiService.resetPage();
+  newsApiService.resetData();
   Markup.clearMarkup();
   loadMoreBtn.show();
   const searchValue = evt.currentTarget.elements.searchQuery.value.trim();
@@ -29,7 +28,10 @@ function onFormSubmit(evt) {
 
 async function getDataSearchValue() {
   loadMoreBtn.disable();
-  if (newsApiService.searchQuery) {
+  console.log(loadMoreBtn.btnSpiner);
+  if (newsApiService.searchQuery === '') {
+    Notify.failure('Enter request.');
+  } else {
     try {
       const foundData = await newsApiService.getData();
       if (foundData.total === 0) {
@@ -39,14 +41,32 @@ async function getDataSearchValue() {
       } else {
         Notify.success(`Hooray! We found ${foundData.totalHits} images.`);
         Markup.renderMarkup(foundData.hits);
+        newsApiService.addLoadCards(foundData.hits.length);
         loadMoreBtn.enable();
       }
     } catch (err) {
       Notify.failure('Sorry, an error occurred, try again later');
     }
-  } else Notify.failure('Enter request.');
+  }
 }
 
-function onLoadMoreClick(foundData) {
-  console.log(foundData.total);
+async function onLoadMoreClick() {
+  loadMoreBtn.disable();
+  try {
+    const foundData = await newsApiService.getData();
+    let diffHit = foundData.totalHits - newsApiService.loadCards;
+    if (foundData.totalHits >= newsApiService.loadCards) {
+      Markup.renderMarkup(foundData.hits);
+      newsApiService.addLoadCards(foundData.hits.length);
+      loadMoreBtn.enable();
+    }
+    if (diffHit <= 40) {
+      Notify.failure(
+        "We're sorry, but you've reached the end of search results."
+      );
+      loadMoreBtn.hide();
+    }
+  } catch (err) {
+    Notify.failure('Sorry, an error occurred, try again later');
+  }
 }

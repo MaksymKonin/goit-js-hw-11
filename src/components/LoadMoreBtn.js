@@ -1,7 +1,7 @@
 export default class LoadMoreBtn {
   constructor({ selector, isHidden }) {
     this.btn = this.getBtn(selector);
-    this.btnSpiner = document.querySelector('button i');
+    this.btnSpiner = document.querySelector('button p');
     if (isHidden) this.hide();
     else this.show();
   }
@@ -23,6 +23,6 @@ export default class LoadMoreBtn {
   enable() {
     this.btn.disable = false;
     this.btn.textContent = 'Load more';
-    this.btnSpiner.classList.remove('fa fa-spinner fa-pulse');
+    this.btnSpiner.classList.remove('fa', 'fa-spinner', 'fa-pulse');
   }
 }
