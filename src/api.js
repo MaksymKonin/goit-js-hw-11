@@ -1,5 +1,5 @@
 import axios from 'axios';
-
+const ENDPOINT = `https://pixabay.com/api`;
 const searchParams = new URLSearchParams({
   key: '33670116-4dfcd9849459bc1b79bb05430',
   q: '',
@@ -10,17 +10,23 @@ const searchParams = new URLSearchParams({
   per_page: 40,
 });
 
-function getData(q) {
-  searchParams.set('q', `${q}`);
-  let URL = `https://pixabay.com/api/?${searchParams}`;
+export default class NewsApiService {
+  constructor() {
+    this.page = 1;
+    this.searchQuery = '';
+  }
 
-  return axios
-    .get(URL)
-    .then(({ data }) => {
-      let nextPage = Number(searchParams.get('page')) + 1;
-      searchParams.set('page', `${nextPage} `);
-      return data;
-    })
-    .catch(eror => console.log(eror));
+  async getData() {
+    const URL = `${ENDPOINT}?${searchParams}&q=${this.searchQuery}&pageSize=5&page=${this.page}`;
+    const response = await axios.get(URL);
+    this.nextPage();
+    return response.data;
+  }
+
+  nextPage() {
+    this.page += 1;
+  }
+  resetPage() {
+    this.page = 1;
+  }
 }
-export default { getData };

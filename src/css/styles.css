@@ -76,9 +76,11 @@ input:hover {
   padding-left: 15px;
   padding-right: 15px;
   margin: 0 auto;
+  text-align: center;
 }
 
 .btn-search-form {
+  font-family: inherit;
   border: none;
   height: 42px;
   width: 42px;
@@ -169,4 +171,29 @@ input:hover {
   .info {
     font-size: 12px;
   }
+}
+
+.load-more {
+  font-family: inherit;
+  font-size: 18px;
+  text-align: center;
+  margin-top: 10px;
+  padding: 12px;
+  cursor: pointer;
+  border-radius: 5%;
+  background-color: aqua;
+  border: 3px solid #f3a109;
+}
+
+button.hidden {
+  display: none;
+}
+button:disabled {
+  background-color: #a09a9a;
+  cursor: not-allowed;
+}
+
+.load-more:focus,
+.load-more:hover {
+  border-color: #38e90c;
 }

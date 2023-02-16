@@ -1,57 +1,52 @@
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import axios from 'axios';
 
-import Api from './api';
+import NewsApiService from './api.js';
+import Markup from './markup.js';
+import LoadMoreBtn from './components/LoadMoreBtn.js';
+
+const newsApiService = new NewsApiService();
+const loadMoreBtn = new LoadMoreBtn({
+  selector: '.load-more',
+  isHidden: true,
+});
 
 const formEl = document.querySelector('#search-form');
-const cardsContainer = document.querySelector('.gallery');
-console.log(cardsContainer);
+
+console.log(loadMoreBtn);
 formEl.addEventListener('submit', onFormSubmit);
+loadMoreBtn.btn.addEventListener('click', onLoadMoreClick);
 
 function onFormSubmit(evt) {
   evt.preventDefault();
+  newsApiService.resetPage();
+  Markup.clearMarkup();
+  loadMoreBtn.show();
   const searchValue = evt.currentTarget.elements.searchQuery.value.trim();
-  Api.getData(searchValue).then(data => {
-    console.log(data);
-    renderMarkup(data.hits);
-  });
+  newsApiService.searchQuery = searchValue;
+  getDataSearchValue();
 }
 
-function markupOneCard({
-  webformatURL,
-  largeImageURL,
-  tags,
-  likes,
-  views,
-  comments,
-  downloads,
-}) {
-  return `<div class="photo-card">
-            <div class="thumb">
-            <img src='${webformatURL}' alt="${tags}" loading="lazy" />
-             </div>
-              <div class="info">
-                <p class="info-item">
-                  <b>Likes</b> <br> ${likes}
-                </p>
-                <p class="info-item">
-                  <b>Views</b> <br> ${views}
-                </p>
-                <p class="info-item">
-                  <b>Comments</b> <br> ${comments}
-                </p>
-                <p class="info-item">
-                  <b>Downloads</b> <br> ${downloads}
-                </p>
-              </div>
-            </div>`;
+async function getDataSearchValue() {
+  loadMoreBtn.disable();
+  if (newsApiService.searchQuery) {
+    try {
+      const foundData = await newsApiService.getData();
+      if (foundData.total === 0) {
+        Notify.failure(
+          'Sorry, there are no images matching your search query. Please try again.'
+        );
+      } else {
+        Notify.success(`Hooray! We found ${foundData.totalHits} images.`);
+        Markup.renderMarkup(foundData.hits);
+        loadMoreBtn.enable();
+      }
+    } catch (err) {
+      Notify.failure('Sorry, an error occurred, try again later');
+    }
+  } else Notify.failure('Enter request.');
 }
 
-function renderMarkup(hits) {
-  let cards = hits
-    .map(hit => {
-      return markupOneCard(hit);
-    })
-    .join('');
-  cardsContainer.insertAdjacentHTML('beforeend', cards);
+function onLoadMoreClick(foundData) {
+  console.log(foundData.total);
 }
