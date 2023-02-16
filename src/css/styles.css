@@ -37,7 +37,7 @@ body {
   background-color: #fafafa;
   color: #212121;
   line-height: 1.5;
-  padding: 20px;
+  margin: 0;
 }
 
 .wrapper {
@@ -71,6 +71,13 @@ input:hover {
   border-color: #38e90c;
 }
 
+.container {
+  width: 100%;
+  padding-left: 15px;
+  padding-right: 15px;
+  margin: 0 auto;
+}
+
 .btn-search-form {
   border: none;
   height: 42px;
@@ -101,23 +108,65 @@ input:hover {
   flex-wrap: wrap;
   align-items: center;
   justify-content: flex-start;
-  gap: 20px;
+  gap: 15px;
 }
 .thumb {
   height: 200px;
 }
 .photo-card {
   flex-basis: 100%;
-  flex-basis: calc((100% - 60px) / 4);
+  flex-basis: calc((100% - 45px) / 4);
   border: 3px solid #f3a109;
 }
 
 .info {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 5px;
+  gap: 8px;
   padding: 8px;
   text-align: center;
+  font-weight: 400;
+}
+@media screen and (min-width: 480px) {
+  .container {
+    width: 480px;
+  }
+  .gallery {
+    gap: 8px;
+  }
+  .photo-card {
+    flex-basis: calc((100% - 8px) / 2);
+  }
+  .info {
+    font-size: 9px;
+  }
+}
+@media screen and (min-width: 768px) {
+  .container {
+    width: 768px;
+  }
+  .gallery {
+    gap: 10px;
+  }
+  .photo-card {
+    flex-basis: calc((100% - 20px) / 3);
+  }
+  .info {
+    font-size: 10px;
+  }
+}
+@media screen and (min-width: 1200px) {
+  .container {
+    width: 1200px;
+  }
+  .gallery {
+    gap: 15px;
+  }
+  .photo-card {
+    flex-basis: calc((100% - 45px) / 4);
+  }
+  .info {
+    font-size: 12px;
+  }
 }
