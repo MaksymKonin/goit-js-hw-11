@@ -1,7 +1,7 @@
 export default class LoadMoreBtn {
   constructor({ selector, isHidden }) {
     this.btn = this.getBtn(selector);
-    this.btnSpiner = document.querySelector('button p');
+    this.btnSpiner = document.querySelector('button i');
     if (isHidden) this.hide();
     else this.show();
   }
