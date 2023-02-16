@@ -33,9 +33,9 @@ function onFormSubmit(evt) {
 
 async function getDataSearchValue() {
   loadMoreBtn.disable();
-  console.log(loadMoreBtn.btnSpiner);
   if (newsApiService.searchQuery === '') {
     Notify.failure('Enter request.');
+    loadMoreBtn.hide();
   } else {
     try {
       const foundData = await newsApiService.getData();
@@ -50,6 +50,7 @@ async function getDataSearchValue() {
       }
     } catch (err) {
       Notify.failure('Sorry, an error occurred, try again later');
+      loadMoreBtn.hide();
     }
   }
 }

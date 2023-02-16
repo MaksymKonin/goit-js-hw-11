@@ -17,7 +17,6 @@ export default class NewsApiService {
 
   async getData() {
     let URL = `${ENDPOINT}?${searchParams}&q=${this.searchQuery}&page=${this.page}`;
-    console.log(URL);
     const response = await axios.get(URL);
     this.nextPage();
     return response.data;
