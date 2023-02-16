@@ -10,13 +10,13 @@ formEl.addEventListener('submit', onFormSubmit);
 
 function onFormSubmit(evt) {
   evt.preventDefault();
-  searchValue = evt.currentTarget.elements.searchQuery.value.trim();
+  const searchValue = evt.currentTarget.elements.searchQuery.value.trim();
   Api.getData(searchValue).then(data => {
     console.log(data);
     renderMarkup(data.hits);
   });
 }
-// 'tiger-white';
+
 function markupOneCard({
   webformatURL,
   largeImageURL,
@@ -26,7 +26,7 @@ function markupOneCard({
   comments,
   downloads,
 }) {
-  const photoCard = `<div class="photo-card">
+  return `<div class="photo-card">
             <div class="thumb">
             <img src='${webformatURL}' alt="${tags}" loading="lazy" />
              </div>
@@ -45,8 +45,6 @@ function markupOneCard({
                 </p>
               </div>
             </div>`;
-
-  return photoCard;
 }
 
 function renderMarkup(hits) {
