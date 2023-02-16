@@ -11,7 +11,9 @@ function markupOneCard({
 }) {
   return `<div class="photo-card">
             <div class="thumb">
+            <a  href="${largeImageURL}">
             <img src='${webformatURL}' alt="${tags}" loading="lazy" />
+            </a>
              </div>
               <div class="info">
                 <p class="info-item">

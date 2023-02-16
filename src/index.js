@@ -1,4 +1,6 @@
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
 
 import NewsApiService from './NewsApiService.js';
 import Markup from './markup.js';
@@ -9,12 +11,15 @@ const loadMoreBtn = new LoadMoreBtn({
   selector: '.load-more',
   isHidden: true,
 });
-
-console.log(loadMoreBtn.btn);
 const formEl = document.querySelector('#search-form');
 
 formEl.addEventListener('submit', onFormSubmit);
 loadMoreBtn.btn.addEventListener('click', onLoadMoreClick);
+
+var gallery = new SimpleLightbox('.gallery a', {
+  captionsData: 'alt',
+  captionDelay: 250,
+});
 
 function onFormSubmit(evt) {
   evt.preventDefault();
@@ -38,11 +43,10 @@ async function getDataSearchValue() {
         Notify.failure(
           'Sorry, there are no images matching your search query. Please try again.'
         );
+        loadMoreBtn.hide();
       } else {
         Notify.success(`Hooray! We found ${foundData.totalHits} images.`);
-        Markup.renderMarkup(foundData.hits);
-        newsApiService.addLoadCards(foundData.hits.length);
-        loadMoreBtn.enable();
+        renderNewMarkup(foundData);
       }
     } catch (err) {
       Notify.failure('Sorry, an error occurred, try again later');
@@ -56,9 +60,7 @@ async function onLoadMoreClick() {
     const foundData = await newsApiService.getData();
     let diffHit = foundData.totalHits - newsApiService.loadCards;
     if (foundData.totalHits >= newsApiService.loadCards) {
-      Markup.renderMarkup(foundData.hits);
-      newsApiService.addLoadCards(foundData.hits.length);
-      loadMoreBtn.enable();
+      renderNewMarkup(foundData);
     }
     if (diffHit <= 40) {
       Notify.failure(
@@ -69,4 +71,23 @@ async function onLoadMoreClick() {
   } catch (err) {
     Notify.failure('Sorry, an error occurred, try again later');
   }
+}
+
+function renderNewMarkup(foundData) {
+  Markup.renderMarkup(foundData.hits);
+  newsApiService.addLoadCards(foundData.hits.length);
+  loadMoreBtn.enable();
+  gallery.refresh();
+  scrollingpageSmooth();
+}
+
+function scrollingpageSmooth() {
+  const { height: cardHeight } = document
+    .querySelector('.gallery')
+    .firstElementChild.getBoundingClientRect();
+
+  window.scrollBy({
+    top: cardHeight * 2,
+    behavior: 'smooth',
+  });
 }
