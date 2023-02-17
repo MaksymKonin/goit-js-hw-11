@@ -1,6 +1,7 @@
 export default class LoadMoreBtn {
   constructor({ selector, isHidden }) {
     this.btn = this.getBtn(selector);
+    this.btnText = document.querySelector('button span');
     this.btnSpiner = document.querySelector('button i');
     if (isHidden) this.hide();
     else this.show();
@@ -20,13 +21,13 @@ export default class LoadMoreBtn {
 
   disable() {
     this.btn.disable = true;
-    this.btn.textContent = 'Loading... ';
+    this.btnText.textContent = 'Loading... ';
     this.btnSpiner.classList.add('fa', 'fa-spinner', 'fa-pulse');
   }
 
   enable() {
     this.btn.disable = false;
-    this.btn.textContent = 'Load more';
+    this.btnText.textContent = 'Load more';
     this.btnSpiner.classList.remove('fa', 'fa-spinner', 'fa-pulse');
   }
 }
