@@ -25,33 +25,35 @@ function onFormSubmit(evt) {
   evt.preventDefault();
   newsApiService.resetData();
   Markup.clearMarkup();
-  loadMoreBtn.show();
+
   const searchValue = evt.currentTarget.elements.searchQuery.value.trim();
-  newsApiService.searchQuery = searchValue;
-  getDataSearchValue();
+
+  if (searchValue === '') {
+    Notify.failure('Enter request.');
+  } else {
+    loadMoreBtn.show();
+    newsApiService.searchQuery = searchValue;
+    getDataSearchValue();
+  }
 }
 
 async function getDataSearchValue() {
   loadMoreBtn.disable();
-  if (newsApiService.searchQuery === '') {
-    Notify.failure('Enter request.');
-    loadMoreBtn.hide();
-  } else {
-    try {
-      const foundData = await newsApiService.getData();
-      if (foundData.total === 0) {
-        Notify.failure(
-          'Sorry, there are no images matching your search query. Please try again.'
-        );
-        loadMoreBtn.hide();
-      } else {
-        Notify.success(`Hooray! We found ${foundData.totalHits} images.`);
-        renderNewMarkup(foundData);
-      }
-    } catch (err) {
-      Notify.failure('Sorry, an error occurred, try again later');
+  try {
+    const foundData = await newsApiService.getData();
+    if (foundData.total === 0) {
+      Notify.failure(
+        'Sorry, there are no images matching your search query. Please try again.'
+      );
       loadMoreBtn.hide();
+    } else {
+      Notify.success(`Hooray! We found ${foundData.totalHits} images.`);
+      renderNewMarkup(foundData);
+      if (foundData.totalHits < 40) loadMoreBtn.hide();
     }
+  } catch (err) {
+    Notify.failure('Sorry, an error occurred, try again later');
+    loadMoreBtn.hide();
   }
 }
 
