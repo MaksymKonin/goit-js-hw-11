@@ -1,5 +1,5 @@
 import axios from 'axios';
-const ENDPOINT = `https://pixabay.com/api`;
+const ENDPOINT = `https://pixabay.com/api/`;
 const searchParams = new URLSearchParams({
   key: '33670116-4dfcd9849459bc1b79bb05430',
   image_type: 'photo',
