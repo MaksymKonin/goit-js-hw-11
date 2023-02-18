@@ -64,6 +64,7 @@ async function onLoadMoreClick() {
     let diffHit = foundData.totalHits - newsApiService.loadCards;
     if (foundData.totalHits >= newsApiService.loadCards) {
       renderNewMarkup(foundData);
+      scrollingpageSmooth();
     }
     if (diffHit <= 40) {
       Notify.failure(
@@ -81,7 +82,6 @@ function renderNewMarkup(foundData) {
   newsApiService.addLoadCards(foundData.hits.length);
   loadMoreBtn.enable();
   gallery.refresh();
-  scrollingpageSmooth();
 }
 
 function scrollingpageSmooth() {
